@@ -47,12 +47,18 @@ public class SubwayController {
 	public void handleSelectCoursePage() {
 		subway.selectPage();
 		String option = input.inputOption();
+		validateOptionValue(option);
+		handleOptionValue(option);
+	}
 
+	private void validateOptionValue(String option) {
 		if(!option.equals("1") && !option.equals("2") && !option.equals("B")) {
 			printErrorMessage();
 			handleSelectCoursePage();
 		}
+	}
 
+	private void handleOptionValue(String option) {
 		if (option.equals("1")) {
 			List<String> stations = inputStartAndEndStations();
 			subway.shortDistancePath(stations.get(0), stations.get(1));
