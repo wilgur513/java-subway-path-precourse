@@ -1,5 +1,7 @@
 package subway;
 
+import subway.domain.Station;
+import subway.domain.StationRepository;
 import subway.domain.Subway;
 import subway.view.input.InputView;
 import subway.view.output.PrintPageView;
@@ -8,8 +10,17 @@ public class Application {
 	private static final InputView input = new InputView();
 
 	public static void main(String[] args) {
+		saveStations();
+
 		Subway subway = initSubway();
 		service(subway);
+	}
+
+	private static void saveStations() {
+		String[] stationNames = {"교대역", "강남역", "역삼역", "남부터미널역", "양재역", "양재시민의숲역", "매봉역"};
+		for (String name : stationNames) {
+			StationRepository.addStation(Station.of(name));
+		}
 	}
 
 	private static Subway initSubway() {
@@ -34,7 +45,7 @@ public class Application {
 		if (option.equals("1")) {
 			String start = input.inputStation("출발역을 입력하세요.");
 			String end = input.inputStation("도착역을 입력하세요.");
-            subway.shortDistancePath(start, end);
+			subway.shortDistancePath(start, end);
 		}
 	}
 }

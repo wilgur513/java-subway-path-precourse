@@ -14,4 +14,11 @@ public class Station {
     public static Station of(String name) {
         return new Station(name);
     }
+
+    @Override
+    public String toString() {
+        return "Station{" +
+            "name='" + name + '\'' +
+            '}';
+    }
 }
