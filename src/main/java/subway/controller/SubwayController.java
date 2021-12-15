@@ -1,66 +1,58 @@
 package subway.controller;
 
 import java.util.List;
-import subway.domain.Subway;
+import subway.domain.SubwayMap;
 import subway.view.input.InputView;
-import subway.view.output.PrintPageView;
-import subway.view.output.PrintPathResultView;
+import subway.view.output.OutputView;
 
 public class SubwayController {
 	private static final InputView input = new InputView();
-	private final Subway subway;
-
-	public SubwayController() {
-		this.subway = createSubway();
-	}
-
-	private Subway createSubway() {
-		Subway subway = new Subway();
-		subway.addObserver(new PrintPageView());
-		subway.addObserver(new PrintPathResultView());
-		return subway;
-	}
 
 	public void service() {
-		while (true) {
-			subway.mainPage();
-			String option = inputOption("1", "Q");
-
-			if (option.equals("1")) {
-				handleSelectCoursePage();
-			} else if (option.equals("Q")) {
-				break;
-			}
+		String option = handleMainPage();
+		while (!option.equals("Q")) {
+			handleSelectPathPage();
+			option = handleMainPage();
 		}
+	}
+
+	private String handleMainPage() {
+		OutputView.printMainPage();
+		return inputOption("1", "Q");
 	}
 
 	private String inputOption(String... validValues) {
 		try {
 			return input.inputOption(validValues);
 		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
-			System.out.println();
+			OutputView.printErrorMessage(e.getMessage());
 			return inputOption(validValues);
 		}
 	}
 
-	public void handleSelectCoursePage() {
-		subway.selectPage();
-		String option = inputOption("1", "2", "B");
-		handleOptionValue(option);
+	public void handleSelectPathPage() {
+		OutputView.printSelectPath();
+		handleSelectPath(inputOption("1", "2", "B"));
 	}
 
-	private void handleOptionValue(String option) {
-		if (option.equals("B")) {
+	private void handleSelectPath(String option) {
+		if (isBackward(option)) {
 			return;
 		}
+		findShortestPath(option);
+	}
 
+	private boolean isBackward(String option) {
+		return option.equals("B");
+	}
+
+	private void findShortestPath(String option) {
 		List<String> stations = inputStartAndEndStations();
-
-		if (option.equals("1")) {
-			subway.shortDistancePath(stations.get(0), stations.get(1));
-		} else if (option.equals("2")) {
-			subway.shortTimePath(stations.get(0), stations.get(1));
+		try {
+			findShortestPathBetweenStations(option, stations.get(0), stations.get(1));
+		} catch (Exception e) {
+			OutputView.printErrorMessage("출발역과 도착역이 연결되어 있지 않습니다.");
+			handleSelectPath(option);
 		}
 	}
 
@@ -68,9 +60,15 @@ public class SubwayController {
 		try {
 			return input.inputStartAndEndStations();
 		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
-			System.out.println();
+			OutputView.printErrorMessage(e.getMessage());
 			return inputStartAndEndStations();
 		}
+	}
+
+	private void findShortestPathBetweenStations(String option, String start, String end) {
+		OutputView.printPathResult(
+			SubwayMap
+				.createSubwayMap(option)
+				.getPathResult(start, end));
 	}
 }

@@ -1,16 +1,12 @@
 package subway.domain;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.WeightedMultigraph;
 
-public class SubwayMap {
-	private final WeightedMultigraph<String, DefaultWeightedEdge> graphForDistance =
-		new WeightedMultigraph(DefaultWeightedEdge.class);
-	private final WeightedMultigraph<String, DefaultWeightedEdge> graphForTime =
+public abstract class SubwayMap {
+	protected final WeightedMultigraph<String, DefaultWeightedEdge> graph =
 		new WeightedMultigraph(DefaultWeightedEdge.class);
 
 	public SubwayMap() {
@@ -21,10 +17,7 @@ public class SubwayMap {
 	private void initVertex() {
 		StationRepository.stations()
 			.stream()
-			.forEach(s -> {
-				graphForDistance.addVertex(s.getName());
-				graphForTime.addVertex(s.getName());
-			});
+			.forEach(s -> graph.addVertex(s.getName()));
 	}
 
 	private void initEdge() {
@@ -35,82 +28,34 @@ public class SubwayMap {
 
 	private void initEdgeByEachLine(Line line) {
 		for (CloseStation closeStation : line.getCloseStations()) {
-			initEdgeByDistance(edgeForDistance(closeStation), closeStation.getDistance());
-			initEdgeByTime(edgeForTime(closeStation), closeStation.getTime());
+			graph.setEdgeWeight(edge(closeStation), getEdgeWeight(closeStation));
 		}
 	}
 
-	private DefaultWeightedEdge edgeForTime(CloseStation closeStation) {
-		return graphForTime.addEdge(closeStation.getLeftStationName(), closeStation.getRightStationName());
+	private DefaultWeightedEdge edge(CloseStation closeStation) {
+		return graph.addEdge(closeStation.getLeftStationName(), closeStation.getRightStationName());
 	}
 
-	private DefaultWeightedEdge edgeForDistance(CloseStation closeStation) {
-		return graphForDistance.addEdge(closeStation.getLeftStationName(), closeStation.getRightStationName());
+	public PathResult getPathResult(String start, String end) {
+		return new PathResult(getShortestPath().getPath(start, end).getVertexList(),
+			getTotalDistance(getShortestPath().getPath(start, end)),
+			getTotalTime(getShortestPath().getPath(start, end)));
 	}
 
-	private void initEdgeByTime(DefaultWeightedEdge edge, int time) {
-		graphForTime.setEdgeWeight(edge, time);
+	private DijkstraShortestPath getShortestPath() {
+		return new DijkstraShortestPath(graph);
 	}
 
-	private void initEdgeByDistance(DefaultWeightedEdge edge, int distance) {
-		graphForDistance.setEdgeWeight(edge, distance);
-	}
+	protected abstract int getTotalTime(GraphPath shortestPath);
 
-	public PathResult getPathResultByShortestDistance(String start, String end) {
-		DijkstraShortestPath shortestPath = new DijkstraShortestPath(graphForDistance);
-		List<String> vertexList = shortestPath.getPath(start, end).getVertexList();
-		return new PathResult(vertexList, findTotalTime(vertexList), (int) shortestPath.getPath(start, end).getWeight());
-	}
+	protected abstract int getTotalDistance(GraphPath shortestPath);
 
-	private int findTotalTime(List<String> vertexList) {
-		int totalTime = 0;
-		String left = vertexList.get(0);
+	protected abstract int getEdgeWeight(CloseStation closeStation);
 
-		for (int i = 1; i < vertexList.size(); i++) {
-			String right = vertexList.get(i);
-			CloseStation closeStation = findLessTimeCloseStation(left, right);
-			totalTime += closeStation.getTime();
-			left = right;
+	public static SubwayMap createSubwayMap(String option) {
+		if (option.equals("1")) {
+			return new SubwayDistanceMap();
 		}
-
-		return totalTime;
-	}
-
-	private CloseStation findLessTimeCloseStation(String left, String right) {
-		return LineRepository.lines().stream()
-			.map(Line::getCloseStations)
-			.flatMap(Collection::stream)
-			.filter(s -> s.isSameCloseStation(left, right))
-			.sorted(Comparator.comparingInt(CloseStation::getTime))
-			.findFirst().get();
-	}
-
-	public PathResult getPathResultByShortestTime(String start, String end) {
-		DijkstraShortestPath shortestPath = new DijkstraShortestPath(graphForTime);
-		List<String> vertexList = shortestPath.getPath(start, end).getVertexList();
-		return new PathResult(vertexList, (int) shortestPath.getPath(start, end).getWeight(), findTotalDistance(vertexList));
-	}
-
-	private int findTotalDistance(List<String> vertexList) {
-		int totalDistance = 0;
-		String left = vertexList.get(0);
-
-		for (int i = 1; i < vertexList.size(); i++) {
-			String right = vertexList.get(i);
-			CloseStation closeStation = findLessDistanceCloseStation(left, right);
-			totalDistance += closeStation.getDistance();
-			left = right;
-		}
-
-		return totalDistance;
-	}
-
-	private CloseStation findLessDistanceCloseStation(String left, String right) {
-		return LineRepository.lines().stream()
-			.map(Line::getCloseStations)
-			.flatMap(Collection::stream)
-			.filter(s -> s.isSameCloseStation(left, right))
-			.sorted(Comparator.comparingInt(CloseStation::getDistance))
-			.findFirst().get();
+		return new SubwayTimeMap();
 	}
 }

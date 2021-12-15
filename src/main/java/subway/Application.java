@@ -21,14 +21,14 @@ public class Application {
 	}
 
 	private static void saveStations() {
-		String[] stationNames = {"교대역", "강남역", "역삼역", "남부터미널역", "양재역", "양재시민의숲역", "매봉역"};
+		String[] stationNames = {"교대역", "강남역", "역삼역", "남부터미널역", "양재역", "양재시민의숲역", "매봉역", "서울역", "시청역"};
 		for (String name : stationNames) {
 			StationRepository.addStation(Station.of(name));
 		}
 	}
 
 	private static void saveLines() {
-		String[] lineNames = {"2호선", "3호선", "신분당선"};
+		String[] lineNames = {"2호선", "3호선", "신분당선", "1호선"};
 		for (String name : lineNames) {
 			LineRepository.addLine(Line.of(name));
 		}
