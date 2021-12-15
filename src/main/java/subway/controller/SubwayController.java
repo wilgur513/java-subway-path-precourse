@@ -1,5 +1,7 @@
 package subway.controller;
 
+import java.util.Arrays;
+import java.util.List;
 import subway.domain.Subway;
 import subway.view.input.InputView;
 import subway.view.output.PrintPageView;
@@ -52,13 +54,17 @@ public class SubwayController {
 		}
 
 		if (option.equals("1")) {
-			String start = input.inputStation("출발역을 입력하세요.");
-			String end = input.inputStation("도착역을 입력하세요.");
-			subway.shortDistancePath(start, end);
+			List<String> stations = inputStartAndEndStations();
+			subway.shortDistancePath(stations.get(0), stations.get(1));
 		} else if (option.equals("2")) {
-			String start = input.inputStation("출발역을 입력하세요.");
-			String end = input.inputStation("도착역을 입력하세요.");
-			subway.shortTimePath(start, end);
+			List<String> stations = inputStartAndEndStations();
+			subway.shortTimePath(stations.get(0), stations.get(1));
 		}
+	}
+
+	private List<String> inputStartAndEndStations() {
+		String start = input.inputStation("출발역을 입력하세요.");
+		String end = input.inputStation("도착역을 입력하세요.");
+		return Arrays.asList(start, end);
 	}
 }
