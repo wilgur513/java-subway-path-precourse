@@ -52,18 +52,22 @@ public class SubwayController {
 	}
 
 	private void validateOptionValue(String option) {
-		if(!option.equals("1") && !option.equals("2") && !option.equals("B")) {
+		if (!option.equals("1") && !option.equals("2") && !option.equals("B")) {
 			printErrorMessage();
 			handleSelectCoursePage();
 		}
 	}
 
 	private void handleOptionValue(String option) {
+		if (option.equals("B")) {
+			return;
+		}
+
+		List<String> stations = inputStartAndEndStations();
+
 		if (option.equals("1")) {
-			List<String> stations = inputStartAndEndStations();
 			subway.shortDistancePath(stations.get(0), stations.get(1));
 		} else if (option.equals("2")) {
-			List<String> stations = inputStartAndEndStations();
 			subway.shortTimePath(stations.get(0), stations.get(1));
 		}
 	}
