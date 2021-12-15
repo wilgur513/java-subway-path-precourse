@@ -3,6 +3,7 @@ package subway.view.input;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import subway.domain.StationRepository;
 
 public class InputView {
 	private static final Scanner scanner = new Scanner(System.in);
@@ -19,15 +20,35 @@ public class InputView {
 		return option;
 	}
 
-	public List<String> inputStartAndEndStations() {
-		String start = inputStation("출발역을 입력하세요.");
-		String end = inputStation("도착역을 입력하세요.");
+	private boolean validateOption(String option, String... validValues) {
+		return Arrays.stream(validValues).anyMatch(value -> value.equals(option));
+	}
 
-		if(start.equals(end)) {
+	public List<String> inputStartAndEndStations() {
+		String start = inputStartStation();
+		String end = inputEndStation();
+
+		if (start.equals(end)) {
 			throw new IllegalArgumentException("[ERROR] 출발역과 도착역이 동일합니다.");
 		}
 
 		return Arrays.asList(start, end);
+	}
+
+	private String inputEndStation() {
+		String end = inputStation("도착역을 입력하세요.");
+		if (!isExistStation(end)) {
+			throw new IllegalArgumentException("[ERROR] 도착역이 존재하지 않습니다.");
+		}
+		return end;
+	}
+
+	private String inputStartStation() {
+		String start = inputStation("출발역을 입력하세요.");
+		if (!isExistStation(start)) {
+			throw new IllegalArgumentException("[ERROR] 출발역이 존재하지 않습니다.");
+		}
+		return start;
 	}
 
 	private String inputStation(String message) {
@@ -37,7 +58,7 @@ public class InputView {
 		return station;
 	}
 
-	private boolean validateOption(String option, String... validValues) {
-		return Arrays.stream(validValues).anyMatch(value -> value.equals(option));
+	private boolean isExistStation(String name) {
+		return StationRepository.existsByName(name);
 	}
 }

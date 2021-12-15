@@ -27,4 +27,8 @@ public class StationRepository {
     public static Station findByName(String name) {
         return stations.stream().filter(station -> station.getName().equals(name)).findFirst().get();
     }
+
+    public static boolean existsByName(String name) {
+        return stations.stream().anyMatch(s -> s.getName().equals(name));
+    }
 }

@@ -1,6 +1,5 @@
 package subway.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import subway.domain.Subway;
 import subway.view.input.InputView;
