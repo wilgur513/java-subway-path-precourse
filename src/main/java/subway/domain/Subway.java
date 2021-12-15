@@ -13,4 +13,8 @@ public class Subway extends Observable {
 		setChanged();
 		notifyObservers(EventType.PRINT_SELECT_COURSE_PAGE);
 	}
+
+	public void shortDistancePath(String start, String end) {
+
+	}
 }
