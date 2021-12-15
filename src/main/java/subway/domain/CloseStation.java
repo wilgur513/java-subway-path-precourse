@@ -16,4 +16,24 @@ public class CloseStation {
 	public static CloseStation of(Station left, Station right, int distance, int time) {
 		return new CloseStation(left, right, distance, time);
 	}
+
+	public boolean isSameCloseStation(String left, String right) {
+		return getLeftStationName().equals(left) && getRightStationName().equals(right);
+	}
+
+	public String getLeftStationName() {
+		return left.getName();
+	}
+
+	public String getRightStationName() {
+		return right.getName();
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public int getTime() {
+		return time;
+	}
 }

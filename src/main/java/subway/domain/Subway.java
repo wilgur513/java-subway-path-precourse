@@ -4,6 +4,8 @@ import java.util.Observable;
 import subway.event.EventType;
 
 public class Subway extends Observable {
+	private final SubwayMap map = new SubwayMap();
+
 	public void mainPage() {
 		setChanged();
 		notifyObservers(EventType.PRINT_MAIN_PAGE);
@@ -15,6 +17,7 @@ public class Subway extends Observable {
 	}
 
 	public void shortDistancePath(String start, String end) {
-
+		PathResult pathResult = map.getPathResultByShortestDistance(start, end);
+		System.out.println(pathResult);
 	}
 }

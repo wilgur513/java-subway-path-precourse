@@ -23,4 +23,8 @@ public class Line {
     public void addCloseStation(CloseStation closeStation) {
         closeStations.add(closeStation);
     }
+
+    public List<CloseStation> getCloseStations() {
+        return closeStations;
+    }
 }
