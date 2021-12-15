@@ -1,6 +1,7 @@
 package subway.view.input;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class InputView {
@@ -18,7 +19,13 @@ public class InputView {
 		return option;
 	}
 
-	public String inputStation(String message) {
+	public List<String> inputStartAndEndStations() {
+		String start = inputStation("출발역을 입력하세요.");
+		String end = inputStation("도착역을 입력하세요.");
+		return Arrays.asList(start, end);
+	}
+
+	private String inputStation(String message) {
 		System.out.println("## " + message);
 		String station = scanner.next();
 		System.out.println();

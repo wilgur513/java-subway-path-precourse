@@ -56,18 +56,12 @@ public class SubwayController {
 			return;
 		}
 
-		List<String> stations = inputStartAndEndStations();
+		List<String> stations = input.inputStartAndEndStations();
 
 		if (option.equals("1")) {
 			subway.shortDistancePath(stations.get(0), stations.get(1));
 		} else if (option.equals("2")) {
 			subway.shortTimePath(stations.get(0), stations.get(1));
 		}
-	}
-
-	private List<String> inputStartAndEndStations() {
-		String start = input.inputStation("출발역을 입력하세요.");
-		String end = input.inputStation("도착역을 입력하세요.");
-		return Arrays.asList(start, end);
 	}
 }
