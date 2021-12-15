@@ -56,12 +56,22 @@ public class SubwayController {
 			return;
 		}
 
-		List<String> stations = input.inputStartAndEndStations();
+		List<String> stations = inputStartAndEndStations();
 
 		if (option.equals("1")) {
 			subway.shortDistancePath(stations.get(0), stations.get(1));
 		} else if (option.equals("2")) {
 			subway.shortTimePath(stations.get(0), stations.get(1));
+		}
+	}
+
+	private List<String> inputStartAndEndStations() {
+		try {
+			return input.inputStartAndEndStations();
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			System.out.println();
+			return inputStartAndEndStations();
 		}
 	}
 }

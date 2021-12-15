@@ -22,6 +22,11 @@ public class InputView {
 	public List<String> inputStartAndEndStations() {
 		String start = inputStation("출발역을 입력하세요.");
 		String end = inputStation("도착역을 입력하세요.");
+
+		if(start.equals(end)) {
+			throw new IllegalArgumentException("[ERROR] 출발역과 도착역이 동일합니다.");
+		}
+
 		return Arrays.asList(start, end);
 	}
 
