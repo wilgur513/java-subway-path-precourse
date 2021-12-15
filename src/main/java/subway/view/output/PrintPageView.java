@@ -2,18 +2,19 @@ package subway.view.output;
 
 import java.util.Observable;
 import java.util.Observer;
+import subway.event.Event;
 import subway.event.EventType;
 
 public class PrintPageView implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
-		EventType type = (EventType) arg;
+		Event event = (Event) arg;
 
-		if(type == EventType.PRINT_MAIN_PAGE) {
+		if(event.getType() == EventType.PRINT_MAIN_PAGE) {
 			printMainPage();
 		}
 
-		if(type == EventType.PRINT_SELECT_COURSE_PAGE) {
+		if(event.getType() == EventType.PRINT_SELECT_COURSE_PAGE) {
 			printSelectCourse();
 		}
 	}

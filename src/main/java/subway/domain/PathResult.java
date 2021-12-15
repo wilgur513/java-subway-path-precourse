@@ -13,12 +13,15 @@ public class PathResult {
 		this.totalDistance = totalDistance;
 	}
 
-	@Override
-	public String toString() {
-		return "PathResult{" +
-			"path=" + path +
-			", totalTime=" + totalTime +
-			", totalDistance=" + totalDistance +
-			'}';
+	public List<String> getPath() {
+		return path;
+	}
+
+	public int getTotalTime() {
+		return totalTime;
+	}
+
+	public int getTotalDistance() {
+		return totalDistance;
 	}
 }

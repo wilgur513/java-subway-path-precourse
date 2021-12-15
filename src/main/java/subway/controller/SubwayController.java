@@ -3,6 +3,7 @@ package subway.controller;
 import subway.domain.Subway;
 import subway.view.input.InputView;
 import subway.view.output.PrintPageView;
+import subway.view.output.PrintPathResultView;
 
 public class SubwayController {
 	private static final InputView input = new InputView();
@@ -15,6 +16,7 @@ public class SubwayController {
 	private Subway createSubway() {
 		Subway subway = new Subway();
 		subway.addObserver(new PrintPageView());
+		subway.addObserver(new PrintPathResultView());
 		return subway;
 	}
 
