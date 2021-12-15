@@ -21,11 +21,15 @@ public class SubwayController {
 	}
 
 	public void service() {
-		subway.mainPage();
-		String option = input.inputOption();
+		while(true) {
+			subway.mainPage();
+			String option = input.inputOption();
 
-		if (option.equals("1")) {
-			handleSelectCoursePage();
+			if (option.equals("1")) {
+				handleSelectCoursePage();
+			} else if(option.equals("Q")) {
+				break;
+			}
 		}
 	}
 
