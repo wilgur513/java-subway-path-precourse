@@ -25,11 +25,7 @@ public class SubwayController {
 	public void service() {
 		while (true) {
 			subway.mainPage();
-			String option = input.inputOption();
-
-			if (!option.equals("1") && !option.equals("Q")) {
-				printErrorMessage();
-			}
+			String option = inputOption("1", "Q");
 
 			if (option.equals("1")) {
 				handleSelectCoursePage();
@@ -39,23 +35,20 @@ public class SubwayController {
 		}
 	}
 
-	private void printErrorMessage() {
-		System.out.println("[ERROR] 잘못된 기능입니다.");
-		System.out.println();
+	private String inputOption(String... validValues) {
+		try {
+			return input.inputOption(validValues);
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			System.out.println();
+			return inputOption(validValues);
+		}
 	}
 
 	public void handleSelectCoursePage() {
 		subway.selectPage();
-		String option = input.inputOption();
-		validateOptionValue(option);
+		String option = inputOption("1", "2", "B");
 		handleOptionValue(option);
-	}
-
-	private void validateOptionValue(String option) {
-		if (!option.equals("1") && !option.equals("2") && !option.equals("B")) {
-			printErrorMessage();
-			handleSelectCoursePage();
-		}
 	}
 
 	private void handleOptionValue(String option) {

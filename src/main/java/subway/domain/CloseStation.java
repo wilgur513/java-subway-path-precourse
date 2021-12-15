@@ -18,7 +18,8 @@ public class CloseStation {
 	}
 
 	public boolean isSameCloseStation(String left, String right) {
-		return getLeftStationName().equals(left) && getRightStationName().equals(right);
+		return getLeftStationName().equals(left) && getRightStationName().equals(right) ||
+			getRightStationName().equals(left) && getLeftStationName().equals(right);
 	}
 
 	public String getLeftStationName() {
