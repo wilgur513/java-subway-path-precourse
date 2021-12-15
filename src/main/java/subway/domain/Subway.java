@@ -20,4 +20,9 @@ public class Subway extends Observable {
 		PathResult pathResult = map.getPathResultByShortestDistance(start, end);
 		System.out.println(pathResult);
 	}
+
+	public void shortTimePath(String start, String end) {
+		PathResult pathResult = map.getPathResultByShortestTime(start, end);
+		System.out.println(pathResult);
+	}
 }

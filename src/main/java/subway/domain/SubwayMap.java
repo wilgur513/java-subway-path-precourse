@@ -3,8 +3,6 @@ package subway.domain;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.WeightedMultigraph;
@@ -70,7 +68,7 @@ public class SubwayMap {
 
 		for (int i = 1; i < vertexList.size(); i++) {
 			String right = vertexList.get(i);
-			CloseStation closeStation = findCloseStation(left, right);
+			CloseStation closeStation = findLessTimeCloseStation(left, right);
 			totalTime += closeStation.getTime();
 			left = right;
 		}
@@ -78,12 +76,41 @@ public class SubwayMap {
 		return totalTime;
 	}
 
-	private CloseStation findCloseStation(String left, String right) {
+	private CloseStation findLessTimeCloseStation(String left, String right) {
 		return LineRepository.lines().stream()
 			.map(Line::getCloseStations)
 			.flatMap(Collection::stream)
 			.filter(s -> s.isSameCloseStation(left, right))
 			.sorted(Comparator.comparingInt(CloseStation::getTime))
+			.findFirst().get();
+	}
+
+	public PathResult getPathResultByShortestTime(String start, String end) {
+		DijkstraShortestPath shortestPath = new DijkstraShortestPath(graphForTime);
+		List<String> vertexList = shortestPath.getPath(start, end).getVertexList();
+		return new PathResult(vertexList, (int) shortestPath.getPath(start, end).getWeight(), findTotalDistance(vertexList));
+	}
+
+	private int findTotalDistance(List<String> vertexList) {
+		int totalDistance = 0;
+		String left = vertexList.get(0);
+
+		for (int i = 1; i < vertexList.size(); i++) {
+			String right = vertexList.get(i);
+			CloseStation closeStation = findLessDistanceCloseStation(left, right);
+			totalDistance += closeStation.getDistance();
+			left = right;
+		}
+
+		return totalDistance;
+	}
+
+	private CloseStation findLessDistanceCloseStation(String left, String right) {
+		return LineRepository.lines().stream()
+			.map(Line::getCloseStations)
+			.flatMap(Collection::stream)
+			.filter(s -> s.isSameCloseStation(left, right))
+			.sorted(Comparator.comparingInt(CloseStation::getDistance))
 			.findFirst().get();
 	}
 }
