@@ -26,8 +26,7 @@ public class SubwayController {
 			String option = input.inputOption();
 
 			if (!option.equals("1") && !option.equals("Q")) {
-				System.out.println("[ERROR] 잘못된 기능입니다.");
-				System.out.println();
+				printErrorMessage();
 			}
 
 			if (option.equals("1")) {
@@ -38,13 +37,17 @@ public class SubwayController {
 		}
 	}
 
+	private void printErrorMessage() {
+		System.out.println("[ERROR] 잘못된 기능입니다.");
+		System.out.println();
+	}
+
 	public void handleSelectCoursePage() {
 		subway.selectPage();
 		String option = input.inputOption();
 
 		if(!option.equals("1") && !option.equals("2") && !option.equals("B")) {
-			System.out.println("[ERROR] 잘못된 기능입니다.");
-			System.out.println();
+			printErrorMessage();
 			handleSelectCoursePage();
 		}
 
