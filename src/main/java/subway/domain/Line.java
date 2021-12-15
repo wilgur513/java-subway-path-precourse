@@ -19,4 +19,8 @@ public class Line {
     public static Line of(String name) {
         return new Line(name);
     }
+
+    public void addCloseStation(CloseStation closeStation) {
+        closeStations.add(closeStation);
+    }
 }
