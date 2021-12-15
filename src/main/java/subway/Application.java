@@ -1,5 +1,7 @@
 package subway;
 
+import subway.domain.Line;
+import subway.domain.LineRepository;
 import subway.domain.Station;
 import subway.domain.StationRepository;
 import subway.domain.Subway;
@@ -11,7 +13,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		saveStations();
-
+		saveLines();
 		Subway subway = initSubway();
 		service(subway);
 	}
@@ -20,6 +22,13 @@ public class Application {
 		String[] stationNames = {"교대역", "강남역", "역삼역", "남부터미널역", "양재역", "양재시민의숲역", "매봉역"};
 		for (String name : stationNames) {
 			StationRepository.addStation(Station.of(name));
+		}
+	}
+
+	private static void saveLines() {
+		String[] lineNames = {"2호선", "3호선", "신분당선"};
+		for (String name : lineNames) {
+			LineRepository.addLine(Line.of(name));
 		}
 	}
 
